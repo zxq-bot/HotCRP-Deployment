@@ -142,7 +142,7 @@ sudo chmod -R o+rx /var/hotcrp
 
 * 接下来修改`session.gc_maxlifetime`参数
 
-  修改/etc/php/7.3/fpm/php.ini中的`session.gc_maxlifetime`：
+  修改/etc/php/7.3/fpm/php.ini中的`session.gc_maxlifetime`
   ```
   session.gc_maxlifetime = 86400
   ```
