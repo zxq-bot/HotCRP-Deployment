@@ -80,14 +80,14 @@ sudo chmod -R o+rx /var/hotcrp (替换为代码文件夹位置)
    ```
 * 创建会议数据库。
    
-   创建会议数据库的账号和密码。这些信息保存在代码文件夹下的conf/options.php中。
+   创建会议数据库的账号和密码，保存在代码文件夹下的conf/options.php中。
    ```
    sudo lib/createdb.sh --user=root --password=root_password_here
    ```
 
 2. 配置Nginx访问HotCRP
    
-   使用Nginx配置 Web 服务器，使所有对 HotCRP 站点的访问均由 HotCRP 的 `index.php` 脚本处理。Nginx配置文件为/etc/nginx/sites-enabled/default，在文件末尾插入以下内容：
+   使用Nginx配置 Web 服务器，使所有对 HotCRP 站点的访问均由 HotCRP 的 `index.php` 脚本处理。Nginx配置文件为/etc/nginx/sites-enabled/default，在文件末尾插入以下内容:
    ```
    server {
        # 注意区分端口，请勿占用其他网站的端口
@@ -123,7 +123,7 @@ sudo chmod -R o+rx /var/hotcrp (替换为代码文件夹位置)
 
 3. 修改PHP相关参数
 
-* 首先在代码文件夹下的.user.ini中修改`upload_max_filesize`、`post_max_size`以及`max_input_vars`三个参数。.user.ini文件内容如下：
+* 首先在代码文件夹下的.user.ini中修改`upload_max_filesize`、`post_max_size`以及`max_input_vars`三个参数。.user.ini文件内容如下:
   ```
   ; PHP FastCGI settings for HotCRP
   
@@ -145,12 +145,18 @@ sudo chmod -R o+rx /var/hotcrp (替换为代码文件夹位置)
   ```
   session.gc_maxlifetime = 86400
   ```
-  在/var/hotcrp/conf/options.php中添加语句
+  在/var/hotcrp/conf/options.php中添加语句:
   ```
   $Opt["sessionLifetime"] = 86400;
   ```
    
  * 最后修改MariaDB的my.cnf
+
+   在/etc/mysql/my.cnf中添加以下语句:
+   ```
+   [mysqld]
+   max_allowed_packet=32M
+   ```
 
    
    
