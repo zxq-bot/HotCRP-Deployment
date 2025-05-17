@@ -55,10 +55,53 @@ systemctl status postfix
 
 * poppler-utils, zip
 ```
-安装poppler-utils和zip
+# 安装poppler-utils和zip
 sudo apt install -y zip poppler-utils
 ```
 
 HotCRP部署
 ------------
+首先将github上HotCRP项目clone到服务器上
+```
+git clone https://github.com/kohler/hotcrp
+```
+
+1. 配置HotCRP数据库
+
+   * 给数据库的 root 用户设置密码，提高数据库服务器的安全性。
+
+   ```
+   sudo mysql_secure_installation
+   ```
+   
+   起始是空密码，直接回车。随后可以设置新密码。
+
+   * 创建会议数据库。
+   
+   ```
+   sudo lib/createdb.sh --user=root --password=root_password_here
+   ```
+   
+   创建会议数据库的账号和密码。这些信息保存在代码文件夹下的conf/options.php中。
+
+   
+
+3. 配置Nginx访问HotCRP
+
+
+
+4. 修改PHP相关参数
+
+
+
+5. 配置Postfix邮件服务
+
+
+
+
+
+
+
+
+
 
