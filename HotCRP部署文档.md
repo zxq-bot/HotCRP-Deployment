@@ -69,7 +69,7 @@ git clone https://github.com/kohler/hotcrp
 # 设置网站目录权限
 sudo chmod -R o+rx /var/hotcrp
 ```
-将/var/hotcrp替换为代码文件夹位置
+将/var/hotcrp替换为代码文件夹位置。
 
 1. 配置HotCRP数据库
 
