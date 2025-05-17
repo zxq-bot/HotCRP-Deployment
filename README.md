@@ -1,2 +1,0 @@
-# HotCRP-
-HotCRP部署
