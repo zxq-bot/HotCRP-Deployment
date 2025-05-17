@@ -10,7 +10,7 @@ HotCRP部署文档
 sudo apt-get update
 sudo apt-get install nginx -y
 
-# 查看nginx版本，出现nginx版本号，即安装成功。
+# 查看nginx版本，出现nginx版本号，即安装成功
 nginx -v
 
 # 启动nginx
@@ -87,7 +87,7 @@ sudo chmod -R o+rx /var/hotcrp (替换为代码文件夹位置)
 
 2. 配置Nginx访问HotCRP
    
-   使用Nginx配置 Web 服务器，使所有对 HotCRP 站点的访问均由 HotCRP 的 `index.php` 脚本处理。Nginx配置文件为/etc/nginx/sites-enabled/default，在文件末尾插入以下内容:
+   使用Nginx配置 Web 服务器，使所有对 HotCRP 站点的访问均由 HotCRP 的 `index.php` 脚本处理。Nginx配置文件为/etc/nginx/sites-enabled/default，在文件末尾插入以下内容：
    ```
    server {
        # 注意区分端口，请勿占用其他网站的端口
@@ -123,7 +123,7 @@ sudo chmod -R o+rx /var/hotcrp (替换为代码文件夹位置)
 
 3. 修改PHP相关参数
 
-* 首先在代码文件夹下的.user.ini中修改`upload_max_filesize`、`post_max_size`以及`max_input_vars`三个参数。.user.ini文件内容如下:
+* 首先在代码文件夹下的.user.ini中修改`upload_max_filesize`、`post_max_size`以及`max_input_vars`三个参数。.user.ini文件内容如下：
   ```
   ; PHP FastCGI settings for HotCRP
   
@@ -145,33 +145,71 @@ sudo chmod -R o+rx /var/hotcrp (替换为代码文件夹位置)
   ```
   session.gc_maxlifetime = 86400
   ```
-  在/var/hotcrp/conf/options.php中添加语句:
+  在/var/hotcrp/conf/options.php中添加语句：
   ```
   $Opt["sessionLifetime"] = 86400;
   ```
    
  * 最后修改MariaDB的my.cnf
 
-   在/etc/mysql/my.cnf中添加以下语句:
+   在/etc/mysql/my.cnf中添加以下语句：
    ```
    [mysqld]
    max_allowed_packet=32M
    ```
-
    
+4. 配置Postfix邮件服务
+
+* 修改/etc/postfix/main.cf
+  ```
+  inet_protocols = ipv4
+
+  # 使用 Gmail SMTP 中继
+  relayhost = [smtp.gmail.com]:587
    
+  # 启用 TLS 和认证
+  smtp_use_tls = yes
+  smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
+  smtp_sasl_auth_enable = yes
+  smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
+  smtp_sasl_security_options = noanonymous
+  smtp_sasl_tls_security_options = noanonymous
+  smtp_tls_security_level = encrypt
+  ```
+  
+* 创建 /etc/postfix/sasl_passwd
 
-   
-
-   
-5. 配置Postfix邮件服务
-
-
-
-
-
-
-
-
-
+  运行以下命令并编辑文件：
+  ```
+  sudo nano /etc/postfix/sasl_passwd
+  ```
+  填入以下内容：
+  ```
+  [smtp.gmail.com]:587 yourname@gmail.com:your_app_password
+  ```
+  注意：
+  * 必须先在 Gmail 设置中生成“应用专用密码”（要求开启两步验证）。
+  * 替换 `yourname@gmail.com` 和 `your_app_password` 为自己的账号信息。
+  
+* 设置权限并生成映射表
+  ```
+  sudo postmap /etc/postfix/sasl_passwd
+  sudo chmod 600 /etc/postfix/sasl_passwd /etc/postfix/sasl_passwd.db
+  ```
+  
+* 重启 Postfix 服务
+  ```
+  sudo systemctl restart postfix
+  ```
+  
+* 测试发送邮件
+  
+  可以用以下命令测试邮件是否能发送成功：
+  ```
+  echo "邮件正文内容" | mail -s "测试邮件标题" your_email@example.com
+  ```
+  
+HotCRP使用指南
+------------
+登录网站创建账户。第一个创建的账户将自动获得系统管理员权限。
 
