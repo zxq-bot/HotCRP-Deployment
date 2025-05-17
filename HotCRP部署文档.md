@@ -63,38 +63,70 @@ HotCRP部署
 ------------
 首先将github上HotCRP项目clone到服务器上
 ```
+# 克隆HotCRP
 git clone https://github.com/kohler/hotcrp
+
+# 设置网站目录权限
+sudo chmod -R o+rx /var/hotcrp
 ```
 
 1. 配置HotCRP数据库
 
    * 给数据库的 root 用户设置密码，提高数据库服务器的安全性。
-
+   
+   起始是空密码，直接回车。随后可以设置新密码。
    ```
    sudo mysql_secure_installation
    ```
-   
-   起始是空密码，直接回车。随后可以设置新密码。
 
    * 创建会议数据库。
    
+   创建会议数据库的账号和密码。这些信息保存在代码文件夹下的conf/options.php中。
    ```
    sudo lib/createdb.sh --user=root --password=root_password_here
    ```
+
+2. 配置Nginx访问HotCRP
    
-   创建会议数据库的账号和密码。这些信息保存在代码文件夹下的conf/options.php中。
+   使用Nginx配置 Web 服务器，使所有对 HotCRP 站点的访问均由 HotCRP 的 `index.php` 脚本处理。Nginx配置文件为/etc/nginx/sites-enabled/default，在文件末尾插入以下内容：
+   ```
+   server {
+       # 注意区分端口，请勿占用其他网站的端口
+       listen 8080 default_server;
+       server_name SNGHotCRP.com;
 
+       # 指定网站的根目录和默认首页文件。
+       root /var/hotcrp;
+       index index.php;
+
+       # 静态资源路径规则
+       location ~* ^/(scripts|stylesheets|images|js|css)/ {
+           access_log off;
+           expires 30d;
+           try_files $uri =404;
+       }
+
+       # 将所有根路径请求转发给 PHP-FPM 并使用 index.php 处理。
+       location / {
+           fastcgi_pass unix:/run/php/php7.3-fpm.sock;
+           fastcgi_split_path_info ^(/[^/]+)(/.*)$;
+           fastcgi_param SCRIPT_FILENAME /var/hotcrp/index.php;
+           include fastcgi_params;
+         }
+
+       # 禁止访问 .htaccess 等以 .ht 开头的文件
+       location ~ /\.ht {
+           deny all;
+       }
+   }
+   ```
+   配置完后，`http://服务器IP:8080/`就能访问到部署的HotCRP网站。
+
+3. 修改PHP相关参数
    
 
-3. 配置Nginx访问HotCRP
 
-
-
-4. 修改PHP相关参数
-
-
-
-5. 配置Postfix邮件服务
+4. 配置Postfix邮件服务
 
 
 
