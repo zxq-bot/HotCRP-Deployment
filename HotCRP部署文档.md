@@ -125,33 +125,35 @@ sudo chmod -R o+rx /var/hotcrp (替换为代码文件夹位置)
 3. 修改PHP相关参数
 
 * 首先在代码文件夹下的.user.ini中修改`upload_max_filesize`、`post_max_size`以及`max_input_vars`三个参数。.user.ini文件内容如下：
-   ```
-   ; PHP FastCGI settings for HotCRP
+  ```
+  ; PHP FastCGI settings for HotCRP
   
-   ; These directives limit how large a paper can be uploaded.
-   ; post_max_size should be >= upload_max_filesize.
-   upload_max_filesize = 15M
-   post_max_size = 20M
+  ; These directives limit how large a paper can be uploaded.
+  ; post_max_size should be >= upload_max_filesize.
+  upload_max_filesize = 15M
+  post_max_size = 20M
   
-   ; Some pages involve a lot of post variables.
-   max_input_vars = 4096
+  ; Some pages involve a lot of post variables.
+  max_input_vars = 4096
   
-   ; A large memory_limit helps when sending very large zipped files.
-   memory_limit = 128M
-   ```
+  ; A large memory_limit helps when sending very large zipped files.
+  memory_limit = 128M
+  ```
 
 * 接下来修改`session.gc_maxlifetime`参数
 
-   修改/etc/php/7.3/fpm/php.ini中的`session.gc_maxlifetime`
-   ```
-   session.gc_maxlifetime = 86400
-   ```
-   在/var/hotcrp/conf/options.php中添加语句
-   ```
-   $Opt["sessionLifetime"] = 86400;
-   ```
+  修改/etc/php/7.3/fpm/php.ini中的`session.gc_maxlifetime`
+  ```
+  session.gc_maxlifetime = 86400
+  ```
+  在/var/hotcrp/conf/options.php中添加语句
+  ```
+  $Opt["sessionLifetime"] = 86400;
+  ```
    
  * 最后修改MariaDB的my.cnf
+
+   
    
 
    
