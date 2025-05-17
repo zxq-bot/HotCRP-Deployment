@@ -67,8 +67,9 @@ HotCRP部署
 git clone https://github.com/kohler/hotcrp
 
 # 设置网站目录权限
-sudo chmod -R o+rx /var/hotcrp (替换为代码文件夹位置)
+sudo chmod -R o+rx /var/hotcrp
 ```
+将/var/hotcrp替换为代码文件夹位置
 
 1. 配置HotCRP数据库
 
@@ -141,7 +142,7 @@ sudo chmod -R o+rx /var/hotcrp (替换为代码文件夹位置)
 
 * 接下来修改`session.gc_maxlifetime`参数
 
-  修改/etc/php/7.3/fpm/php.ini中的`session.gc_maxlifetime`
+  修改/etc/php/7.3/fpm/php.ini中的`session.gc_maxlifetime`：
   ```
   session.gc_maxlifetime = 86400
   ```
